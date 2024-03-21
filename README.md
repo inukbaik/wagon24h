@@ -2,6 +2,7 @@
 ## Bring A Trailer Wagon Scraper
 
 This Python script scrapes wagon listings from Bring A Trailer website, downloads images, and creates tweets with information about each wagon. It is intended to automate the process of sharing wagon listings on Twitter.
+Check out the Twitter account created with this script: [Wagon24h](https://twitter.com/Wagon24h)
 
 ## Getting Started
 
