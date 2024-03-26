@@ -1,2 +1,8 @@
 # Storage for API passkey and stuff
 .env
+
+# Ignore node_modules
+.DS_Store
+
+# Ignore .idea
+.idea
