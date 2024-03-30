@@ -124,23 +124,23 @@ for link in cars_link:
     if os.path.exists(f'photos/{car_name}_2.jpg'):
         media3 = old_api.media_upload(f'photos/{car_name}_2.jpg')
 
-    # Check if media1 was successfully uploaded
-    if media1.media_id:
-        # Compose and post tweet
-        api.create_tweet(text=f'{car_name} in {ends_in}\n'
-                              f'Current Bid: {current_bid}\n'
-                              f'Location: {location}\n'
-                              f'Mileage: {mileage}\n'
-                              f'Link: {link}\n\n'
-                              f'{HASHTAGS}',
-                         media_ids=[media1.media_id,
-                                    media2.media_id if media2 else None,
-                                    media3.media_id if media3 else None])
+    # Compose and post tweet
+    media_ids = [media1.media_id]
+    if media2:
+        media_ids.append(media2.media_id)
+    if media3:
+        media_ids.append(media3.media_id)
+
+    api.create_tweet(text=f'{car_name} in {ends_in}\n'
+                          f'Current Bid: {current_bid}\n'
+                          f'Location: {location}\n'
+                          f'Mileage: {mileage}\n'
+                          f'Link: {link}\n\n'
+                          f'{HASHTAGS}',
+                     media_ids=media_ids)
 
     # Print a message indicating successful posting
-        print("Posted Successfully")
-    else:
-        print("Failed to post")
+    print("Posted Successfully")
 
     # Remove images after posting
     for file in glob.glob('photos/*.jpg'):
