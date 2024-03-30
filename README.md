@@ -52,16 +52,58 @@ Ensure you have Python installed on your system.
 
 This project does not currently include automated tests.
 
-## Deployment
+## Deployment with Crontab
 
-This project can be deployed on a live system by executing the `main.py` file on a server with Python installed. You may want to schedule it to run at regular intervals using tools like cron jobs.
+This project can be deployed on a live system by executing the `main.py` file on a server with Python installed. You can automate the execution of `main.py` at regular intervals using `crontab`, a time-based job scheduler in Unix-like operating systems.
+
+### Setting Up Crontab
+
+1. **Access Your Server**: Connect to your Linux server using SSH.
+
+2. **Open Crontab for Editing**: Run the following command to open the crontab file for editing:
+   ```bash
+   crontab -e
+   ```
+
+3. **Add a Cron Job**: In the crontab file, add a new line to specify when you want `main.py` to run. For example, to run `main.py` every day at 12 PM EST (5 PM UTC), you can add the following line:
+   ```bash
+   0 17 * * * /usr/bin/python3 /path/to/main.py
+   ```
+   Replace `/path/to/main.py` with the actual path to your `main.py` file.
+
+4. **Save and Exit**: After adding the cron job, save and exit the crontab editor.
+
+### Example Crontab Entry
+
+Here's an example of a crontab entry to run `main.py` every day at 12 PM EST (5 PM UTC):
+```bash
+0 17 * * * /usr/bin/python3 /path/to/main.py
+```
+
+### Checking Crontab Status
+
+To check the status of your crontab and verify that the cron job was successfully added, you can run the following command:
+```bash
+crontab -l
+```
+
+### Additional Notes
+
+- Make sure that the Python interpreter path (`/usr/bin/python3`) is correct for your system.
+- Ensure that the file permissions for `main.py` allow it to be executed by the user running the cron job.
 
 ## Built With
 
+- Linux
 - Python
 - Selenium
 - Tweepy
 - Requests
+
+## Environment
+
+- **Operating System**: Ubuntu 20.04 LTS
+- **Python Version**: Python 3.11.5
 
 ## License
 
