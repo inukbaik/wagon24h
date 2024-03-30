@@ -115,20 +115,32 @@ for link in cars_link:
 
     # Upload images to Twitter
     media1 = old_api.media_upload(f'photos/{car_name}_main.jpg')
-    media2 = old_api.media_upload(f'photos/{car_name}_1.jpg')
-    media3 = old_api.media_upload(f'photos/{car_name}_2.jpg')
+    media2 = None
+    media3 = None
 
-    # Compose and post tweet
-    api.create_tweet(text=f'{car_name} in {ends_in}\n'
-                          f'Current Bid: {current_bid}\n'
-                          f'Location: {location}\n'
-                          f'Mileage: {mileage}\n'
-                          f'Link: {link}\n\n'
-                          f'{HASHTAGS}',
-                     media_ids=[media1.media_id, media2.media_id, media3.media_id])
+    # Check if media2 and media3 files exist before attempting to upload
+    if os.path.exists(f'photos/{car_name}_1.jpg'):
+        media2 = old_api.media_upload(f'photos/{car_name}_1.jpg')
+    if os.path.exists(f'photos/{car_name}_2.jpg'):
+        media3 = old_api.media_upload(f'photos/{car_name}_2.jpg')
+
+    # Check if media1 was successfully uploaded
+    if media1.media_id:
+        # Compose and post tweet
+        api.create_tweet(text=f'{car_name} in {ends_in}\n'
+                              f'Current Bid: {current_bid}\n'
+                              f'Location: {location}\n'
+                              f'Mileage: {mileage}\n'
+                              f'Link: {link}\n\n'
+                              f'{HASHTAGS}',
+                         media_ids=[media1.media_id,
+                                    media2.media_id if media2 else None,
+                                    media3.media_id if media3 else None])
 
     # Print a message indicating successful posting
-    print("Posted Successfully")
+        print("Posted Successfully")
+    else:
+        print("Failed to post")
 
     # Remove images after posting
     for file in glob.glob('photos/*.jpg'):
