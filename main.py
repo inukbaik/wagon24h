@@ -69,6 +69,13 @@ cars_link = [car.get_attribute('href') for car in driver.find_elements(By.CLASS_
 # Count cars with 1 day left or countdown timer
 cars_count = sum(1 for time in cars_countdown if time.text == '1 day' or ':' in time.text)
 
+# Check if there are no wagons to post
+if cars_count == 0:
+    print("No wagons to post")
+    driver.quit()
+    conn.close()
+    exit()
+
 # Limit car links to the ones that are relevant based on countdown
 cars_link = cars_link[:cars_count]
 
@@ -119,6 +126,9 @@ for link in cars_link:
                           f'Link: {link}\n\n'
                           f'{HASHTAGS}',
                      media_ids=[media1.media_id, media2.media_id, media3.media_id])
+
+    # Print a message indicating successful posting
+    print("Posted Successfully")
 
     # Remove images after posting
     for file in glob.glob('photos/*.jpg'):
