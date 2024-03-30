@@ -49,8 +49,11 @@ old_api = tweepy.API(auth)
 TWEET_FORMAT = 'Today\'s wagon. Might end soon so go get your wagon.'
 HASHTAGS = "#WagonWednesday #VintageWagon #DailyWagonDeal #ClassicWagon #WagonForSale"
 
-# Configure Chrome options
+# Configure Chrome options - headless mode and detach
 chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_experimental_option('detach', True)
 
 # Initialize Chrome webdriver
