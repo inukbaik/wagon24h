@@ -1,13 +1,24 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from database import insert_car_data
+from config import PHOTO_DIR
 import os
 import requests
 import tweepy
 import glob
 from dotenv import load_dotenv
+import sqlite3
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Connect to SQLite database
+conn = sqlite3.connect('car_prices.db')
+c = conn.cursor()
+
+# Create table for car prices if not exists
+c.execute('''CREATE TABLE IF NOT EXISTS car_prices 
+             (car_name TEXT, current_bid TEXT, location TEXT, mileage TEXT, link TEXT, timestamp TIMESTAMP)''')
 
 # Fetch necessary environment variables
 X_BEARER_TOKEN = os.getenv('BEARER_TKN')
@@ -33,9 +44,6 @@ auth = tweepy.OAuth1UserHandler(
 
 # Create old_api with the authenticated user
 old_api = tweepy.API(auth)
-
-# Define directory to store downloaded photos
-PHOTO_DIR = 'photos'
 
 # Format for the tweet and hashtags
 TWEET_FORMAT = 'Today\'s wagon. Might end soon so go get your wagon.'
@@ -71,6 +79,9 @@ for link in cars_link:
     location = driver.find_element(By.XPATH, value='/html/body/main/div/div[3]/div[1]/div[1]/a').text
     mileage = driver.find_element(By.XPATH, value='/html/body/main/div/div[3]/div[1]/div[1]/div[2]/ul/li[2]').text
     ends_in = driver.find_element(By.XPATH, value='/html/body/main/div/div[2]/div[1]/div/div/div[1]/div[2]/div[1]/strong').text
+
+    # Insert data into the database
+    insert_car_data(conn, c, car_name, current_bid, location, mileage, link)
 
     # Extract main image URL
     image_main = driver.find_element(By.CSS_SELECTOR, value='.post-image')
@@ -112,3 +123,7 @@ for link in cars_link:
 
 # Quit the driver
 driver.quit()
+
+# Commit changes and close connection
+conn.commit()
+conn.close()
